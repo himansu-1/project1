@@ -5,7 +5,7 @@ export const getOnlineUsersList = () => async (dispatch: any) => {
     try {
         dispatch(onlineUserStart());
         socket.on("online-users", (userIds: string[]) => {
-            onlineUserSuccess(userIds);
+            dispatch(onlineUserSuccess(userIds));
         });
     } catch (err) {
         let errorMessage = 'Login failed. Please try again later.';
