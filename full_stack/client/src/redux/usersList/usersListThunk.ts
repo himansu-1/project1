@@ -1,7 +1,7 @@
 import { usersListStart, usersListSuccess, usersListFailure } from './usersListSlice';
 import axios from '../../api/axiosInstance';
 
-export const getOnlineUsersList = (view: string) => async (dispatch: any) => {
+export const getUsersList = (view: string) => async (dispatch: any) => {
     try {
         dispatch(usersListStart());
 
@@ -11,7 +11,8 @@ export const getOnlineUsersList = (view: string) => async (dispatch: any) => {
             ? res.data
             : res.data.map((user: any) => ({ user, chatId: null }));
 
-        usersListSuccess(data);
+        dispatch(usersListSuccess(data));
+        console.log(data);
     } catch (err) {
         let errorMessage = 'Login failed. Please try again later.';
         if (err && typeof err === 'object' && 'response' in err) {

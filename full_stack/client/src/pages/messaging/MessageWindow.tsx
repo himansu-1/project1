@@ -16,6 +16,7 @@ import { clearAllMessages, fetchAllMessage, receiveMessage, sendMessages } from 
 
 const MessageWindow = ({
     userId,
+    userName,
     chatId,
     onBack
 }: {
@@ -86,7 +87,7 @@ const MessageWindow = ({
         <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
             <Box sx={{ p: 2, borderBottom: '1px solid #ccc' }}>
                 <Button onClick={onBack}>Back</Button>
-                <Typography variant="h6" mt={1}>Chat with: {userId}</Typography>
+                <Typography variant="h6" mt={1}>Chat with: {userName}</Typography>
             </Box>
 
             <Box
