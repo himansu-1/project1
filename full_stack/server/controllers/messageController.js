@@ -41,6 +41,7 @@ exports.getChatsByUser = async (req, res) => {
     }
 }
 
+// GET /api/messages/:userId?page=1&limit=20
 exports.getMessages = async (req, res) => {
     console.log("/:user");
 
@@ -57,9 +58,21 @@ exports.getMessages = async (req, res) => {
         // if (!chat) return res.status(404).json({ error: 'Chat not found' });
         if (!chat) return res.status(200).json([]);
 
-        const messages = await Message.find({ chatId: chat._id }).sort({ createdAt: 1 });
+        // const messages = await Message.find({ chatId: chat._id }).sort({ createdAt: 1 });
 
-        res.json({ chatId: chat._id, messages });
+        // pagination
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 20;
+        const skip = (page - 1) * limit;
+
+        const messages = await Message.find({ chatId: chat._id })
+            .sort({ createdAt: -1 }) // Most recent first
+            .skip(skip)
+            .limit(limit);
+
+        res.json({ chatId: chat._id, messages: messages.reverse(), hasMore: messages.length === limit }); // Reverse to show oldest at top
+
+        // res.json({ chatId: chat._id, messages });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
