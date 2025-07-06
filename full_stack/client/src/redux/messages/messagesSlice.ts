@@ -4,11 +4,13 @@ interface MessagesState {
   messages: any[];
   chatId: string | null;
   loading: boolean;
+  hasMore: boolean;
   error: string | null;
 }
 const initialState: MessagesState = {
   messages: [],
   chatId: null,
+  hasMore: true,
   loading: false,
   error: null,
 };
@@ -23,8 +25,10 @@ const messagesSlice = createSlice({
     },
     messagesSuccess: (state, action) => {
       state.loading = false;
-      state.messages = action.payload.messages;
       state.chatId = action.payload.chatId;
+      state.hasMore = action.payload.hasMore;
+      // state.messages = action.payload.messages;
+      state.messages = [...state.messages, ...action.payload.messages];
     },
     messagesSendSuccess: (state, action) => {
       state.loading = false;

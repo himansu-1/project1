@@ -1,5 +1,6 @@
 // src/redux/auth/authThunks.js
 import axios from '../../api/axiosInstance';
+import { socket } from '../../api/socket';
 import { toBase64 } from '../../utils/toBase64';
 import type { AppDispatch } from '../store';
 import { authStart, authSuccess, authFailure, logoutUser } from './authSlice';
@@ -9,6 +10,9 @@ export const loginUser = (credentials: { email: string; password: string }) => a
         dispatch(authStart());
         const res = await axios.post('auth/login', credentials, { withCredentials: true });
         dispatch(authSuccess(res.data));
+        // const socket = createSocket();
+        // socket.emit('register-user', res.data._id);
+        socket.connect();
     } catch (err) {
         let errorMessage = 'Login failed. Please try again later.';
         if (err && typeof err === 'object' && 'response' in err) {

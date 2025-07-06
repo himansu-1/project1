@@ -22,7 +22,7 @@ import { getUsersList } from "../../redux/usersList/usersListThunk";
 const UserList = ({
   onSelect,
 }: {
-  onSelect: (userId: string, chatId: string) => void;
+  onSelect: (userId: string, chatId: string, userName: string) => void;
 }) => {
   const [view, setView] = useState<"chats" | "all">("chats");
   const [searchTerm, setSearchTerm] = useState("");

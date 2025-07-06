@@ -27,6 +27,9 @@ function App() {
   useEffect(() => {
     if (auth?.user?._id) {
       // console.log('User registered with socket:', auth.user._id);
+
+      
+      socket.connect();
       socket.emit('register-user', auth.user._id);
       // Tab has focus
       const handleFocus = async () => {
