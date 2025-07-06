@@ -1,6 +1,8 @@
 // socket.js
 const { Server } = require("socket.io");
 const User = require('./models/User'); // ✅ Import your User model (adjust the path)
+const cookie = require('cookie');
+const jwt = require('jsonwebtoken');
 
 let io;
 
@@ -14,6 +16,29 @@ function setupSocket(server) {
             credentials: true,
         },
     });
+
+    io.use((socket, next) => {
+        const { cookie: cookieHeader } = socket.handshake.headers;
+
+        if (!cookieHeader) {
+            return next(new Error("No cookies found"));
+        }
+
+        const cookies = cookie.parse(cookieHeader);
+        const token = cookies.token;
+
+        if (!token) {
+            return next(new Error("Authentication token missing in cookies"));
+        }
+
+        try {
+            const user = jwt.verify(token, process.env.JWT_SECRET);
+            socket.user = user;
+            next();
+        } catch (err) {
+            return next(new Error("Invalid authentication token"));
+        }
+    })
 
     io.on("connection", (socket) => {
         console.log("New client connected:", socket.id);
@@ -48,6 +73,53 @@ function setupSocket(server) {
             }
         });
 
+        // Handle typing indicator
+        socket.on("typing", ({ toUserId }) => {
+            // Get the sender's user ID from the connectedUsers map
+            let fromUserId;
+            for (const [userId, sockId] of connectedUsers.entries()) {
+                if (sockId === socket.id) {
+                    fromUserId = userId;
+                    break;
+                }
+            }
+            
+            if (!fromUserId) {
+                console.log("Could not find user ID for socket:", socket.id);
+                return;
+            }
+            
+            // Get the recipient's socket ID
+            const recipientSocketId = connectedUsers.get(toUserId);
+            if (recipientSocketId) {
+                io.to(recipientSocketId).emit("typing", { fromUserId });
+                console.log("typing event sent:", fromUserId, "->", toUserId);
+            }
+        });
+
+        // Handle stop typing indicator
+        socket.on("stop-typing", ({ toUserId }) => {
+            // Get the sender's user ID from the connectedUsers map
+            let fromUserId;
+            for (const [userId, sockId] of connectedUsers.entries()) {
+                if (sockId === socket.id) {
+                    fromUserId = userId;
+                    break;
+                }
+            }
+            
+            if (!fromUserId) {
+                console.log("Could not find user ID for socket:", socket.id);
+                return;
+            }
+            
+            // Get the recipient's socket ID
+            const recipientSocketId = connectedUsers.get(toUserId);
+            if (recipientSocketId) {
+                io.to(recipientSocketId).emit("stop-typing", { fromUserId });
+                console.log("stop typing event sent:", fromUserId, "->", toUserId);
+            }
+        });
 
         socket.on("disconnect", () => {
             for (const [userId, sockId] of connectedUsers.entries()) {
