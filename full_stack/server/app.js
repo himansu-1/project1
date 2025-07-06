@@ -29,6 +29,7 @@ app.use(cookieParser());
 //   "optionsSuccessStatus": 204
 // }
 const corsOptions = {
+  // origin: '*', // your React app's origin (Vite default port)
   origin: 'http://localhost:5173', // your React app's origin (Vite default port)
   credentials: true,               // required to allow cookies
 };

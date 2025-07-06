@@ -2,16 +2,17 @@ import axios from '../../api/axiosInstance';
 import { socket } from '../../api/socket';
 import { messagesStart, messagesSuccess, messagesFailure, messagesSendSuccess, clearMessages } from './messagesSlice';
 
-export const fetchAllMessage = (userId: string, chatId: string) => async (dispatch: any) => {
+export const fetchAllMessage = (userId: string, chatId: string, pageNumber = 1, limit = 20) => async (dispatch: any) => {
     try {
         dispatch(messagesStart());
-        const res = await axios.get(`/messages/${userId}`, { withCredentials: true });
+        const res = await axios.get(`/messages/${userId}?page=${pageNumber}&limit=${limit}`, { withCredentials: true });
         // read messages
         await axios.put(`/messages/mark-read`, { chatId: chatId }, { withCredentials: true });
 
         dispatch(messagesSuccess({
             messages: res.data.messages,
-            chatId
+            chatId,
+            hasMore: res.data.hasMore
         }));
     } catch (err: any) {
         dispatch(messagesFailure(err.response?.data?.message || 'Failed to fetch messages'));

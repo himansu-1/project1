@@ -1,9 +1,9 @@
 // pages/ChatPage.tsx
 import React from 'react';
-import useChat from '../../hooks/useChat';
 import UserList from './UserList';
 import MessageWindow from './MessageWindow'; // you'll create this
 import { Box, Paper, Typography } from '@mui/material';
+import useChat from '../../hooks/useChat';
 
 const ChatPage = () => {
     const { selectedChat, selectChat, clearChat } = useChat();
@@ -40,6 +40,7 @@ const ChatPage = () => {
                     ) : (
                         <MessageWindow
                             userId={selectedChat.userId}
+                            userName={selectedChat.userName}
                             chatId={selectedChat.chatId}
                             onBack={clearChat}
                         />

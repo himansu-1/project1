@@ -13,6 +13,7 @@ const Logout: React.FC = () => {
     dispatch(logout());
     socket.emit("offline")
     navigate('/login');
+    socket.disconnect();
   };
 
   return <button onClick={handleLogout}>Log-out</button>;
