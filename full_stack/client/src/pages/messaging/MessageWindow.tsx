@@ -10,7 +10,7 @@ import { socket } from '../../api/socket';
 import { useAppSelector } from '../../redux/hooks';
 import { useDispatch } from 'react-redux';
 import type { AppDispatch } from '../../redux/store';
-import { clearAllMessages, fetchAllMessage, receiveMessage, sendMessages } from '../../redux/messages/messagesThunks';
+import { clearAllMessages, fetchAllMessage, sendMessages } from '../../redux/messages/messagesThunks';
 import { clearUnreadForUser, moveUserToTop } from '../../redux/usersList/usersListSlice';
 
 const MessageWindow = ({

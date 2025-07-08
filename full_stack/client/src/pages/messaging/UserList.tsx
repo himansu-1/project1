@@ -17,7 +17,6 @@ import { useEffect, useState } from "react";
 import { socket } from "../../api/socket";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { clearUsersList, getUsersList } from "../../redux/usersList/usersListThunk";
-import { incrementUnreadForUser, moveUserToTop } from "../../redux/usersList/usersListSlice";
 import { selectChat } from "../../redux/chat/chatSlice";
 
 const UserList = ({
@@ -30,32 +29,12 @@ const UserList = ({
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const usersList = useAppSelector((state) => state.userList.usersList);
   const dispatch = useAppDispatch();
-  const selectedChat = useAppSelector((state) => state.chat.selectedChat);
 
   useEffect(() => {
     dispatch(getUsersList(view));
-    // const handleReceiveMessage = () => {
-    //   // Delay to prevent rapid spam refresh
-    //   const timeout = setTimeout(() => {
-    //     dispatch(getUsersList(view));
-    //   }, 300); // debounce by 300ms
-
-    //   return () => clearTimeout(timeout);
-    // };
-
-    // socket.on("receive-message", (data: any) => {
-    //   dispatch(moveUserToTop(data.from));
-    //   if (selectedChat?.userId !== data.from) {
-    //     dispatch(incrementUnreadForUser({
-    //       fromUserId: data.from,
-    //       messageText: data.message.messageText
-    //     }));
-    //   }
-    // });
 
     return () => {
       dispatch(clearUsersList());
-      // socket.off("receive-message", handleReceiveMessage);
     }
   }, [view, dispatch]);
 
