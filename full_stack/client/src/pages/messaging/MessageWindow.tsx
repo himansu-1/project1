@@ -11,6 +11,7 @@ import { useAppSelector } from '../../redux/hooks';
 import { useDispatch } from 'react-redux';
 import type { AppDispatch } from '../../redux/store';
 import { clearAllMessages, fetchAllMessage, receiveMessage, sendMessages } from '../../redux/messages/messagesThunks';
+import { clearUnreadForUser, moveUserToTop } from '../../redux/usersList/usersListSlice';
 
 const MessageWindow = ({
     userId,
@@ -18,12 +19,12 @@ const MessageWindow = ({
     chatId,
     onBack
 }: {
+    key: string;
     userId: string;
     userName: string;
     chatId: string;
     onBack: () => void;
 }) => {
-
     const [messages, setMessages] = useState<Array<any>>([]);
     const [newMessage, setNewMessage] = useState('');
     const pageNumberRef = useRef(1);
@@ -90,36 +91,37 @@ const MessageWindow = ({
         if (!newMessage.trim()) return;
 
         const newChatId = await dispatch(sendMessages(newMessage, userId, localChatId));
+        dispatch(moveUserToTop(userId));
         if (!localChatId && newChatId) {
             setLocalChatId(newChatId);
         }
         setNewMessage('');
     }
 
-    // Receiving message from socket
-    useEffect(() => {
-        const handleMessageReceive = (data: any) => {
-            if (data.from === userId) {
-                dispatch(receiveMessage(data.message, user._id));
-            }
-        };
+    // // Receiving message from socket
+    // useEffect(() => {
+    //     const handleMessageReceive = (data: any) => {
+    //         if (data.from === userId) {
+    //             dispatch(receiveMessage(data.message, user._id));
+    //         }
+    //     };
 
-        socket.on('receive-message', handleMessageReceive);
-        return () => {
-            socket.off('receive-message', handleMessageReceive);
-        };
-    }, [userId, user?._id, dispatch]);
+    //     socket.on('receive-message', handleMessageReceive);
+    //     return () => {
+    //         socket.off('receive-message', handleMessageReceive);
+    //     };
+    // }, [userId, user?._id, dispatch]);
 
     // Fetching messages
     useEffect(() => {
         const handleIncomingTyping = (data: any) => {
-            console.log("Typing event received from:", data.fromUserId);
+            // console.log("Typing event received from:", data.fromUserId);
             if (data.fromUserId === userId) {
                 setIsTyping(true);
             }
         }
         const handleStopTyping = (data: any) => {
-            console.log("Stop typing event received from:", data.fromUserId);
+            // console.log("Stop typing event received from:", data.fromUserId);
             if (data.fromUserId === userId) {
                 setIsTyping(false);
             }
@@ -153,6 +155,7 @@ const MessageWindow = ({
             new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
         );
         setMessages(sorted);
+        dispatch(clearUnreadForUser(userId));
 
         setTimeout(() => {
             scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
