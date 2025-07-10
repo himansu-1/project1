@@ -12,7 +12,7 @@ export const getUsersList = (view: string) => async (dispatch: any) => {
             : res.data.map((user: any) => ({ user, chatId: null }));
 
         dispatch(usersListSuccess(data));
-        console.log(data);
+        // console.log(data);
     } catch (err) {
         let errorMessage = 'Login failed. Please try again later.';
         if (err && typeof err === 'object' && 'response' in err) {
@@ -22,3 +22,7 @@ export const getUsersList = (view: string) => async (dispatch: any) => {
         dispatch(usersListFailure(errorMessage));
     }
 };
+
+export const clearUsersList = () => async (dispatch: any) => {
+    dispatch(usersListSuccess([]));
+}

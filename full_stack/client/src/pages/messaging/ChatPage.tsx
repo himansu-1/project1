@@ -1,13 +1,43 @@
-// pages/ChatPage.tsx
-import React from 'react';
 import UserList from './UserList';
 import MessageWindow from './MessageWindow'; // you'll create this
 import { Box, Paper, Typography } from '@mui/material';
 import useChat from '../../hooks/useChat';
+import ProtectedRoute from '../ProtectedRoute';
+import { useEffect, useRef } from 'react';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { incrementUnreadForUser, moveUserToTop } from '../../redux/usersList/usersListSlice';
+import { receiveMessage } from '../../redux/messages/messagesThunks';
+import { socket } from '../../api/socket';
 
 const ChatPage = () => {
-    const { selectedChat, selectChat, clearChat } = useChat();
+    const { selectedChat, selectChat, clearChat } = useChat();    
+    const hasInitializedRef = useRef(false);
+    const dispatch = useAppDispatch();
+    const auth: any = useAppSelector((state) => state.auth);
 
+    useEffect(() => {        
+        hasInitializedRef.current = true;
+        
+        const handleReceiveMessage = (data: any) => {
+            dispatch(moveUserToTop(data.from));
+
+            if (selectedChat?.userId === data.from) {
+                dispatch(receiveMessage(data.message, auth?.user?._id));
+            } else {
+                dispatch(incrementUnreadForUser({
+                    fromUserId: data.from,
+                    messageText: data.message.messageText
+                }));
+            }
+        };
+
+        socket.on("receive-message", handleReceiveMessage);
+
+        return () => {
+            socket.off("receive-message", handleReceiveMessage);
+        };
+    }, [dispatch, auth?.user?._id, selectedChat?.userId]);
+    
     return (
         <>
             <Box sx={{ display: 'flex', height: '95vh' }}>
@@ -39,6 +69,7 @@ const ChatPage = () => {
                         </Box>
                     ) : (
                         <MessageWindow
+                            key={selectedChat.chatId}
                             userId={selectedChat.userId}
                             userName={selectedChat.userName}
                             chatId={selectedChat.chatId}
@@ -51,4 +82,4 @@ const ChatPage = () => {
     );
 };
 
-export default ChatPage;
+export default ProtectedRoute(ChatPage);

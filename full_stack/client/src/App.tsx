@@ -1,23 +1,13 @@
-import { Routes, Route } from 'react-router-dom';
-import ProtectedRoute from './pages/ProtectedRoute';
-import Dashboard from './pages/Dashboard';
-import Login from './pages/auth/Login';
-import Signup from './pages/auth/Signup';
 import { useEffect } from 'react';
-import Layout from './pages/Layout';
 import { useAppDispatch, useAppSelector } from './redux/hooks';
 import { loadUser } from './redux/auth/authThunks';
-import ChatPage from './pages/messaging/ChatPage';
 import { socket } from './api/socket';
-import { toastMessageNotification, toastNotification } from './utils/toastNotification';
-
-const ProtectedDashboard = ProtectedRoute(Dashboard);
-const ProtectedChatPage = ProtectedRoute(ChatPage);
+// import { toastMessageNotification, toastNotification } from './utils/toastNotification';
+import AppRoutes from './AppRoutes';
 
 function App() {
   const dispatch = useAppDispatch();
   const auth: any = useAppSelector((state) => state.auth);
-
 
   useEffect(() => {
     dispatch(loadUser());
@@ -50,15 +40,15 @@ function App() {
       const handleMessageNotification = (payload: any) => {
         switch (payload.type) {
           case 'message':
-            toastMessageNotification(payload.senderName || "Someone", payload.message.messageText);
+            // toastMessageNotification(payload.senderName || "Someone", payload.message.messageText);
             break;
 
           case 'user-registered':
-            toastNotification("User just signed up!")
+            // toastNotification("User just signed up!")
             break;
 
           case 'login':
-            toastNotification("User just logged in!")
+            // toastNotification("User just logged in!")
             break;
 
           default:
@@ -78,14 +68,7 @@ function App() {
   }, [auth?.user?._id]);
 
   return (
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route path="/dashboard" element={<ProtectedDashboard />} />
-        <Route path="/users" element={<ProtectedChatPage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-      </Route>
-    </Routes>
+    <AppRoutes />
   )
 }
 

@@ -112,8 +112,10 @@ exports.sendMessage = async (req, res) => {
             media,
             readBy: [senderId],
         });
-
         await message.save();
+
+        // Update chat last activity
+        await Chat.findByIdAndUpdate(finalChatId, { lastActivity: Date.now() });
 
         res.status(201).json({ message, chatId: finalChatId });
     } catch (err) {
@@ -180,26 +182,52 @@ exports.getChatUsers = async (req, res) => {
     try {
         const userId = req.user._id.toString();
 
-        const chats = await Chat.find({ members: new mongoose.Types.ObjectId(userId) });
+        // const chats = await Chat.find({ members: new mongoose.Types.ObjectId(userId) });
+        // Get chats involving the user, sorted by most recently updated
+        const chats = await Chat.find({ members: userId })
+            .sort({ lastActivity: -1 }) // descending (most recent first)
+            .lean(); // slightly faster read-only
 
-        const results = [];
+        const results = await Promise.all(
+            chats.map(async (chat) => {
+                const otherUserId = chat.members.find(id => id.toString() !== userId);
+                const user = await User.findById(otherUserId).select('name email');
 
-        for (const chat of chats) {
-            const otherUserId = chat.members.find(id => id.toString() !== userId);
-            const user = await User.findById(otherUserId).select('name email');
-            if (user) {
-                results.push({
-                    chatId: chat._id,
-                    user: {
-                        _id: user._id,
-                        name: user.name,
-                        email: user.email
-                    }
-                });
-            }
-        }
+                if (user) {
+                    // Fetch unread messages for this chat
+                    const unreadMessages = await Message.find({
+                        chatId: chat._id,
+                        readBy: { $ne: userId }, // not read by this user
+                        senderId: { $ne: userId } // exclude own messages
+                    })
+                        .sort({ createdAt: -1 }) // newest first
+                        .limit(1) // only the latest unread
+                        .lean();
 
-        res.json(results);
+                    const latestUnreadMessage = unreadMessages[0];
+
+                    // Count total unread messages for this chat
+                    const unreadCount = await Message.countDocuments({
+                        chatId: chat._id,
+                        readBy: { $ne: userId },
+                        senderId: { $ne: userId }
+                    });
+                    return {
+                        chatId: chat._id,
+                        user: {
+                            _id: user._id,
+                            name: user.name,
+                            email: user.email,
+                        },
+                        lastUnreadMessage: latestUnreadMessage?.messageText || null,
+                        unreadCount,
+                    };
+                }
+                return null;
+            })
+        );
+
+        res.json(results.filter(Boolean));
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

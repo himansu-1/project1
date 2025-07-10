@@ -97,7 +97,8 @@ exports.getCurrentUser = async (req, res) => {
 
 exports.getUserList = async (req, res) => {
     try{
-        const users = await User.find({ _id: { $ne: req.user._id } });
+        // const users = await User.find({ _id: { $ne: req.user._id } });
+        const users = await User.find({ _id: { $ne: req.user._id } }).sort({ name: 1 });
         res.status(200).json(users);
     } catch (error) {
         res.status(500).json({ message: error.message });

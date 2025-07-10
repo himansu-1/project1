@@ -8,8 +8,8 @@ export default function useChat() {
     chatId: string;
   } | null>(null);
 
-  const selectChat = (userId: string, userName: string, chatId: string) => {
-    setSelectedChat({ userId, userName, chatId });
+  const selectChat = (userId: string, chatId: string, userName: string) => {
+    setSelectedChat({ userId, chatId, userName });
   };
 
   const clearChat = () => setSelectedChat(null);

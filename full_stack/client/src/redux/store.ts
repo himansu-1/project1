@@ -4,13 +4,15 @@ import authReducer from './auth/authSlice';
 import messageReducer from './messages/messagesSlice';
 import onlineUserReducer from './onlineUser/onlineUserSlice';
 import usersListReducer from './usersList/usersListSlice';
+import chatReducer from './chat/chatSlice';
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     messages: messageReducer,
     onlineUsers: onlineUserReducer,
-    userList: usersListReducer
+    userList: usersListReducer,
+    chat: chatReducer
   },
 });
 
