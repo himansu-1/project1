@@ -7,6 +7,13 @@ const userSchema = new mongoose.Schema({
     password: {type: String, require: true},
     profile_image: {type: String},
     profile_image_id: {type: String},
+    uid: {type: String, unique: true},
+    auth_type: {
+        type: String,
+        enum: ["google", "facebook", "microsoft", "direct"],
+        default: "google",
+        require: true,
+    },
     role: {
         type: String,
         enum: ["admin", "user", "content"],

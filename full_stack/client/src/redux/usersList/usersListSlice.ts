@@ -28,9 +28,33 @@ const usersListSlice = createSlice({
     usersListFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
+    },
+    moveUserToTop: (state, action) => {
+      const userId = action.payload;
+      const index = state.usersList.findIndex(u => u.user._id === userId);
+      if (index > -1) {
+        const [userItem] = state.usersList.splice(index, 1);
+        state.usersList.unshift(userItem);
+      }
+    },
+    clearUnreadForUser: (state, action) => {
+      const userId = action.payload;
+      const user = state.usersList.find(u => u.user._id === userId);
+      if (user) {
+        user.unreadCount = 0;
+        user.lastUnreadMessage = null;
+      }
+    },
+    incrementUnreadForUser: (state, action) => {
+      const { fromUserId, messageText } = action.payload;
+      const user = state.usersList.find(u => u.user._id === fromUserId);
+      if (user) {
+        user.unreadCount = (user.unreadCount || 0) + 1;
+        user.lastUnreadMessage = messageText;
+      }
     }
   },
 });
 
-export const { usersListStart, usersListSuccess, usersListFailure } = usersListSlice.actions;
+export const { usersListStart, usersListSuccess, usersListFailure, moveUserToTop, clearUnreadForUser, incrementUnreadForUser } = usersListSlice.actions;
 export default usersListSlice.reducer;

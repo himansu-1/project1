@@ -1,3 +1,5 @@
+import ProtectedRoute from "./ProtectedRoute";
+
 function Dashboard() {
   function handlePermissionClick() {
     Notification.requestPermission().then((permission) => {
@@ -21,4 +23,4 @@ function Dashboard() {
   )
 }
 
-export default Dashboard
+export default ProtectedRoute(Dashboard);
