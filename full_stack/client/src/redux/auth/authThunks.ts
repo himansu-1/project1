@@ -1,17 +1,17 @@
 // src/redux/auth/authThunks.js
+import { signInWithPopup } from 'firebase/auth';
 import axios from '../../api/axiosInstance';
 import { socket } from '../../api/socket';
 import { toBase64 } from '../../utils/toBase64';
 import type { AppDispatch } from '../store';
 import { authStart, authSuccess, authFailure, logoutUser } from './authSlice';
+import { auth, googleProvider } from '../../utils/firebase';
 
 export const loginUser = (credentials: { email: string; password: string }) => async (dispatch: any) => {
     try {
         dispatch(authStart());
         const res = await axios.post('auth/login', credentials, { withCredentials: true });
         dispatch(authSuccess(res.data));
-        // const socket = createSocket();
-        // socket.emit('register-user', res.data._id);
         socket.connect();
     } catch (err) {
         let errorMessage = 'Login failed. Please try again later.';
@@ -51,6 +51,7 @@ export const registerUser = (formData: {
         });
 
         dispatch(authSuccess(res.data));
+        socket.connect();
     } catch (err) {
         dispatch(authFailure("Registration failed"));
     }
@@ -68,5 +69,31 @@ export const loadUser = () => async (dispatch: AppDispatch) => {
         dispatch(authSuccess(res.data));
     } catch (err: any) {
         dispatch(authFailure(err.response?.data?.message || 'Session expired'));
+    }
+};
+
+export const googleLogin = () => async (dispatch: AppDispatch) => {
+    try {
+        dispatch(authStart());
+
+        const result = await signInWithPopup(auth, googleProvider);
+        const user = result.user;
+        const idToken = await user.getIdToken(); // 🔐
+        
+        // Send to backend to register or login
+        const res = await axios.post('/auth/google-login',
+            {}, {
+            headers: {
+                Authorization: `Bearer ${idToken}`,
+            },
+            withCredentials: true
+        });
+    
+        dispatch(authSuccess(res.data));
+        socket.connect(); // optional
+    } catch (err: any) {
+        console.error('Google login error:', err);
+        dispatch(authFailure(err.response?.data?.message));
+        
     }
 };

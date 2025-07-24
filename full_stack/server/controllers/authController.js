@@ -2,6 +2,7 @@ const User = require("../models/User");
 const generateToken = require("../utils/generateToken");
 const logUserAction = require('../utils/logUserAction');
 const uploadImage = require('../utils/uploadImages');
+const admin = require("../config/firebase");
 
 exports.register = async (req, res) => {
     console.log("/register");
@@ -97,9 +98,52 @@ exports.getCurrentUser = async (req, res) => {
 
 exports.getUserList = async (req, res) => {
     try{
-        const users = await User.find({ _id: { $ne: req.user._id } });
+        // const users = await User.find({ _id: { $ne: req.user._id } });
+        const users = await User.find({ _id: { $ne: req.user._id } }).sort({ name: 1 });
         res.status(200).json(users);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
+};
+
+exports.googleLogin = async (req, res) => {
+    
+  try {
+    const idToken = req.headers.authorization?.split("Bearer ")[1];
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    const { email, name, picture, uid } = decodedToken;
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      user = await User.create({
+        name,
+        email,
+        password: uid,
+        profile_image: picture,
+        uid,
+        isGoogleLogin: true,
+        auth_type: "google"
+      });
+    }
+
+    const token = generateToken(user._id);
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: false,
+      maxAge: 60 * 60 * 1000,
+    });
+
+    res.status(200).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      token,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(401).json({ message: "Google login failed" });
+  }
 };
