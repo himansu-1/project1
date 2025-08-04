@@ -1,0 +1,186 @@
+[{
+  "_id": {
+    "$oid": "683d5164df0637925049afb4"
+  },
+  "members": [
+    {
+      "$oid": "683d496202a72b1fcef3bee4"
+    },
+    {
+      "$oid": "683a9cc5e79483227cc81b02"
+    }
+  ],
+  "isGroup": false,
+  "createdAt": {
+    "$date": "2025-06-02T07:23:16.630Z"
+  },
+  "__v": 0,
+  "lastActivity": {
+    "$date": "2025-07-07T17:38:36.554Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "683ea05a1b6d244dbfbc4bcd"
+  },
+  "members": [
+    {
+      "$oid": "683a9cc5e79483227cc81b02"
+    },
+    {
+      "$oid": "683b12b500523fba5eeb5a81"
+    }
+  ],
+  "isGroup": false,
+  "createdAt": {
+    "$date": "2025-06-03T07:12:26.851Z"
+  },
+  "__v": 0,
+  "lastActivity": {
+    "$date": "2025-07-08T06:23:00.682Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "683ea66d71de76f65dcd4a1d"
+  },
+  "members": [
+    {
+      "$oid": "683ea60771de76f65dcd4a07"
+    },
+    {
+      "$oid": "683a9cc5e79483227cc81b02"
+    }
+  ],
+  "isGroup": false,
+  "createdAt": {
+    "$date": "2025-06-03T07:38:21.598Z"
+  },
+  "__v": 0,
+  "lastActivity": {
+    "$date": "2025-07-08T06:22:09.237Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "683ecc6f71de76f65dcd4a78"
+  },
+  "members": [
+    {
+      "$oid": "683a9cc5e79483227cc81b02"
+    },
+    {
+      "$oid": "683ecaf771de76f65dcd4a49"
+    }
+  ],
+  "isGroup": false,
+  "createdAt": {
+    "$date": "2025-06-03T10:20:31.969Z"
+  },
+  "__v": 0,
+  "lastActivity": {
+    "$date": "2025-07-07T18:34:37.019Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "683ee709a538558e11cc2852"
+  },
+  "members": [
+    {
+      "$oid": "683b12b500523fba5eeb5a81"
+    },
+    {
+      "$oid": "683ecaf771de76f65dcd4a49"
+    }
+  ],
+  "isGroup": false,
+  "createdAt": {
+    "$date": "2025-06-03T12:14:01.029Z"
+  },
+  "__v": 0,
+  "lastActivity": {
+    "$date": "2025-07-08T06:30:07.770Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "683ef83a4ba242d5d4e90e53"
+  },
+  "members": [
+    {
+      "$oid": "683ecaf771de76f65dcd4a49"
+    },
+    {
+      "$oid": "683ea60771de76f65dcd4a07"
+    }
+  ],
+  "isGroup": false,
+  "createdAt": {
+    "$date": "2025-06-03T13:27:22.937Z"
+  },
+  "__v": 0,
+  "lastActivity": {
+    "$date": "2025-07-08T16:03:09.266Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6842780ce1551c206c5d8d67"
+  },
+  "members": [
+    {
+      "$oid": "683ea60771de76f65dcd4a07"
+    },
+    {
+      "$oid": "683b12b500523fba5eeb5a81"
+    }
+  ],
+  "isGroup": false,
+  "createdAt": {
+    "$date": "2025-06-06T05:09:32.090Z"
+  },
+  "__v": 0,
+  "lastActivity": {
+    "$date": "2025-07-08T06:26:48.841Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68427ae105a2c6e6d6efe40c"
+  },
+  "members": [
+    {
+      "$oid": "683ea60771de76f65dcd4a07"
+    },
+    {
+      "$oid": "683d496202a72b1fcef3bee4"
+    }
+  ],
+  "isGroup": false,
+  "createdAt": {
+    "$date": "2025-06-06T05:21:37.308Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68427b1f05a2c6e6d6efe43c"
+  },
+  "members": [
+    {
+      "$oid": "683d496202a72b1fcef3bee4"
+    },
+    {
+      "$oid": "683ecaf771de76f65dcd4a49"
+    }
+  ],
+  "isGroup": false,
+  "createdAt": {
+    "$date": "2025-06-06T05:22:39.582Z"
+  },
+  "__v": 0,
+  "lastActivity": {
+    "$date": "2025-07-07T16:37:38.667Z"
+  }
+}]

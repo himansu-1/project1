@@ -3,22 +3,78 @@ import MessageWindow from './MessageWindow'; // you'll create this
 import { Box, Paper, Typography } from '@mui/material';
 import useChat from '../../hooks/useChat';
 import ProtectedRoute from '../ProtectedRoute';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { incrementUnreadForUser, moveUserToTop } from '../../redux/usersList/usersListSlice';
+import { addUserToChatList, incrementUnreadForUser, moveUserToTop } from '../../redux/usersList/usersListSlice';
 import { receiveMessage } from '../../redux/messages/messagesThunks';
 import { socket } from '../../api/socket';
+import { clearUsersList, getUsersList } from '../../redux/usersList/usersListThunk';
 
 const ChatPage = () => {
-    const { selectedChat, selectChat, clearChat } = useChat();    
+
+    const { selectedChat, selectChat, clearChat } = useChat();
     const hasInitializedRef = useRef(false);
-    const dispatch = useAppDispatch();
     const auth: any = useAppSelector((state) => state.auth);
 
-    useEffect(() => {        
+    const [view, setView] = useState<"chats" | "all">("chats");
+    const [searchTerm, setSearchTerm] = useState("");
+    const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
+    const usersList = useAppSelector((state) => state.userList.usersList);
+    const allUsers = useAppSelector((state) => state.userList.allUsers);
+    const dispatch = useAppDispatch();
+
+    console.log("ChatPage usersList:", usersList);
+    
+
+    useEffect(() => {
+        dispatch(getUsersList(view));
+
+        return () => {
+            dispatch(clearUsersList());
+        }
+    }, [view, dispatch]);
+
+    useEffect(() => {
+        setSearchTerm('')
+    }, [selectChat]);
+
+    useEffect(() => {
+        socket.on("online-users", (userIds: string[]) => {
+            setOnlineUsers(userIds);
+        });
+
+        return () => {
+            socket.off("online-users");
+        };
+    }, []);
+
+    // Filter users based on search term
+    const filteredUsers = usersList.filter(
+        ({ user }) =>
+            user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    useEffect(() => {
         hasInitializedRef.current = true;
-        
+
         const handleReceiveMessage = (data: any) => {
+            const senderId = data.from;
+            console.log("Received message from:", data);
+
+            const userExistsInChats = usersList.some(u => u.user._id === senderId);
+
+            if (!userExistsInChats) {
+                const userFromAllUsers = allUsers.find(u => u._id === senderId);
+
+                if (userFromAllUsers) {
+                    dispatch(addUserToChatList({ user: userFromAllUsers, chatId: data.chatId || null }));
+                } else {
+                    console.warn("User data not available in message payload for new sender", senderId);
+                }
+            }
+
+            // Move user to top of the list
             dispatch(moveUserToTop(data.from));
 
             if (selectedChat?.userId === data.from) {
@@ -37,7 +93,7 @@ const ChatPage = () => {
             socket.off("receive-message", handleReceiveMessage);
         };
     }, [dispatch, auth?.user?._id, selectedChat?.userId]);
-    
+
     return (
         <>
             <Box sx={{ display: 'flex', height: '95vh' }}>
@@ -48,7 +104,15 @@ const ChatPage = () => {
                         overflowY: 'auto',
                     }}
                 >
-                    <UserList onSelect={selectChat} />
+                    <UserList
+                        onSelect={selectChat}
+                        filteredUsers={filteredUsers}
+                        searchTerm={searchTerm}
+                        setSearchTerm={setSearchTerm}
+                        view={view}
+                        setView={setView}
+                        onlineUsers={onlineUsers}
+                    />
                 </Paper>
                 {/* Main Chat Area */}
                 <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>

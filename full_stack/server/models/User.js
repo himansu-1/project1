@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+// const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const userSchema = new mongoose.Schema({
     name: {type: String, require: true},
@@ -20,6 +21,9 @@ const userSchema = new mongoose.Schema({
         default: "user",
     },
 }, {timestamps: true});
+
+// Add auto-increment plugin to uid
+// userSchema.plugin(AutoIncrement, {inc_field: 'uid'});
 
 userSchema.pre("save", async function(next) {
     if (!this.isModified("password")) return next();

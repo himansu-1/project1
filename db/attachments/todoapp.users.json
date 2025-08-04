@@ -1,0 +1,125 @@
+[{
+  "_id": {
+    "$oid": "683a9cc5e79483227cc81b02"
+  },
+  "name": "Himansu",
+  "email": "himansu@gmail.com",
+  "password": "$2b$10$FVhulEfB/HAgVbzE2oVCRuDxazldVqTO3tuoIZqPNybPUxdUFRl7a",
+  "role": "user",
+  "createdAt": {
+    "$date": "2025-05-31T06:08:05.285Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-31T06:08:05.285Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683b12b500523fba5eeb5a81"
+  },
+  "name": "Suman",
+  "email": "suman@gmail.com",
+  "password": "$2b$10$j5XW7i8bTpQjPhb4hJ7iI.FAg1UoGuG0LxpwnJil51PlTWg9Nhtku",
+  "profile_image": "https://res.cloudinary.com/dgg2kgrkj/image/upload/v1748701877/user-profiles/ad4yy27i7ostittvzj62.jpg",
+  "profile_image_id": "user-profiles/ad4yy27i7ostittvzj62",
+  "role": "user",
+  "createdAt": {
+    "$date": "2025-05-31T14:31:17.692Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-31T14:31:17.692Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683d496202a72b1fcef3bee4"
+  },
+  "name": "Sagar",
+  "email": "sagar@gmail.com",
+  "password": "$2b$10$vAtCOkvib.sjrr4CcuDPW.CUhvMiPLiKkEnbDAn71FHPWPperhK9m",
+  "profile_image": "https://res.cloudinary.com/dgg2kgrkj/image/upload/v1748846947/user-profiles/fxsl6qm0tezeathxe8gh.jpg",
+  "profile_image_id": "user-profiles/fxsl6qm0tezeathxe8gh",
+  "role": "user",
+  "createdAt": {
+    "$date": "2025-06-02T06:49:06.968Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-02T06:49:06.968Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683ea60771de76f65dcd4a07"
+  },
+  "name": "Amit Kumar Gouda",
+  "email": "amit@gmail.com",
+  "password": "$2b$10$8.Bf5GN3B8OM6ag73/0WjeF5oOABVZ1nysemgkBzWoG3sMzbm8ZPi",
+  "profile_image": "",
+  "profile_image_id": "",
+  "role": "user",
+  "createdAt": {
+    "$date": "2025-06-03T07:36:39.714Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-03T07:36:39.714Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683ecaf771de76f65dcd4a49"
+  },
+  "name": "Jay",
+  "email": "jay@gmail.com",
+  "password": "$2b$10$qYX7sqaQOr7HAI.km23zx.jM3ziMTQSmK.dCjXiw1DwCnec4BYhM2",
+  "profile_image": "",
+  "profile_image_id": "",
+  "role": "user",
+  "createdAt": {
+    "$date": "2025-06-03T10:14:15.517Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-03T10:14:15.517Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fdb531177c0a108c53cad"
+  },
+  "name": "Akash",
+  "email": "akash@gmail.com",
+  "password": "$2b$10$/aUwMPl5rbvjPy60vTrBZOkZNDbgWi1cM3sgwIXtmK7Oyg7O4tbka",
+  "profile_image": "",
+  "profile_image_id": "",
+  "role": "user",
+  "createdAt": {
+    "$date": "2025-06-16T08:52:35.445Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T08:52:35.445Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "686e8f018df08f83b4ae2116"
+  },
+  "name": "Himansu Sekhar Sahu",
+  "email": "himansusekharsahu123@gmail.com",
+  "password": "$2b$10$h48U.BsYeMS90HoubSYPF.swWTKgt5kg7N1Qr.WTSg1g72seyRF5C",
+  "profile_image": "https://lh3.googleusercontent.com/a/ACg8ocIHaF3WiWIVLLACr3E_OzkaG0BmmqiLR-StYWvE3emXPPRBSgRB=s96-c",
+  "uid": "bU886OPXETcoVXCbQvwBtepqepj1",
+  "auth_type": "google",
+  "role": "user",
+  "createdAt": {
+    "$date": "2025-07-09T15:47:13.185Z"
+  },
+  "updatedAt": {
+    "$date": "2025-07-09T15:47:13.185Z"
+  },
+  "__v": 0
+}]

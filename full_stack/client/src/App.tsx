@@ -9,15 +9,9 @@ function App() {
   const dispatch = useAppDispatch();
   const auth: any = useAppSelector((state) => state.auth);
 
-  // useEffect(() => {
-  //   dispatch(loadUser());
-  // }, [dispatch]);
   useEffect(() => {
-    // If user is not loaded, and there is a token, try loading the user
-    if (!auth.user && auth.token && !auth.loading) {
-      dispatch(loadUser());
-    }
-  }, [auth.user, auth.token, auth.loading, dispatch]);
+    dispatch(loadUser());
+  }, [dispatch]);
 
   // Register user with socket once user is loaded
   useEffect(() => {

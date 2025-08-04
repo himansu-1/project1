@@ -25,6 +25,7 @@ exports.register = async (req, res) => {
         name, email, password,
         profile_image: imageData.url || '',
         profile_image_id: imageData.public_id || '',
+        auth_type: "direct"
     });
 
     const token = generateToken(user._id);

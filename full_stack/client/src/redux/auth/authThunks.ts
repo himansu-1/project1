@@ -46,7 +46,7 @@ export const registerUser = (formData: {
         };
 
         const res = await axios.post('auth/register', payload, {
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'multipart/form-data' },
             withCredentials: true,
         });
 

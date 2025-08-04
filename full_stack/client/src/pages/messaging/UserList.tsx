@@ -13,51 +13,49 @@ import {
   Typography,
 } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
-import { useEffect, useState } from "react";
+import { useEffect, useState, type SetStateAction } from "react";
 import { socket } from "../../api/socket";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { clearUsersList, getUsersList } from "../../redux/usersList/usersListThunk";
 import { selectChat } from "../../redux/chat/chatSlice";
+import type { Dispatch } from "@reduxjs/toolkit";
+
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  image?: string;
+}
+
+interface FilteredUser {
+  user: User;
+  chatId: string;
+  unreadCount: number;
+  lastUnreadMessage?: string;
+}
+
+interface UserListProps {
+  onSelect: (userId: string, chatId: string, userName: string) => void;
+  filteredUsers: FilteredUser[];
+  searchTerm: string;
+  setSearchTerm: React.Dispatch<SetStateAction<string>>;
+  view: "chats" | "all";
+  setView: React.Dispatch<SetStateAction<"chats" | "all">>;
+  onlineUsers: string[]; // array of user._id strings
+}
 
 const UserList = ({
   onSelect,
-}: {
-  onSelect: (userId: string, chatId: string, userName: string) => void;
-}) => {
-  const [view, setView] = useState<"chats" | "all">("chats");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
-  const usersList = useAppSelector((state) => state.userList.usersList);
+  filteredUsers,
+  searchTerm,
+  setSearchTerm,
+  view,
+  setView,
+  onlineUsers,
+}: UserListProps
+) => {
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    dispatch(getUsersList(view));
-
-    return () => {
-      dispatch(clearUsersList());
-    }
-  }, [view, dispatch]);
-
-  useEffect(() => {
-    setSearchTerm('')
-  }, [onSelect]);
-
-  useEffect(() => {
-    socket.on("online-users", (userIds: string[]) => {
-      setOnlineUsers(userIds);
-    });
-
-    return () => {
-      socket.off("online-users");
-    };
-  }, []);
-
-  // Filter users based on search term
-  const filteredUsers = usersList.filter(
-    ({ user }) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
   return (
     <>
       <Stack
@@ -107,26 +105,8 @@ const UserList = ({
                   userId: user._id,
                   userName: user.name,
                   chatId: chatId
-                }));                
+                }));
               }}>
-                {/* <ListItemText
-                  primary={
-                    <Stack direction="row" alignItems="center" gap={1}>
-                      {user.name}
-                      {isOnline && (
-                        <Box
-                          sx={{
-                            width: 10,
-                            height: 10,
-                            bgcolor: "#00f",
-                            borderRadius: "50%",
-                          }}
-                        />
-                      )}
-                    </Stack>
-                  }
-                  secondary={user.email}
-                /> */}
                 <ListItemText
                   primary={
                     <Stack direction="row" alignItems="center" justifyContent="space-between">

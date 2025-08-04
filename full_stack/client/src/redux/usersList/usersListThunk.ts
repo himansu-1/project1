@@ -1,4 +1,4 @@
-import { usersListStart, usersListSuccess, usersListFailure } from './usersListSlice';
+import { usersListStart, usersListSuccess, usersListFailure, setAllUsers, clearAllUsers } from './usersListSlice';
 import axios from '../../api/axiosInstance';
 
 export const getUsersList = (view: string) => async (dispatch: any) => {
@@ -12,6 +12,11 @@ export const getUsersList = (view: string) => async (dispatch: any) => {
             : res.data.map((user: any) => ({ user, chatId: null }));
 
         dispatch(usersListSuccess(data));
+
+        // When fetching all users, also save them to allUsers in the store
+        if (view === 'all') {
+            dispatch(setAllUsers(res.data));  // raw users array from backend
+        }
         // console.log(data);
     } catch (err) {
         let errorMessage = 'Login failed. Please try again later.';
@@ -25,4 +30,5 @@ export const getUsersList = (view: string) => async (dispatch: any) => {
 
 export const clearUsersList = () => async (dispatch: any) => {
     dispatch(usersListSuccess([]));
+    dispatch(clearAllUsers());  // Clear allUsers as well
 }

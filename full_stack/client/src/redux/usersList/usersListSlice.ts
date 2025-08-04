@@ -5,12 +5,14 @@ interface usersList {
   usersList: any[];
   loading: boolean;
   error: string | null;
+  allUsers: any[]; // Added to store all users if needed
 }
 
 const initialState: usersList = {
   usersList: [],
   loading: false,
   error: null,
+  allUsers: [], // Added to store all users if needed
 };
 
 const usersListSlice = createSlice({
@@ -52,9 +54,34 @@ const usersListSlice = createSlice({
         user.unreadCount = (user.unreadCount || 0) + 1;
         user.lastUnreadMessage = messageText;
       }
-    }
+    },
+    addUserToChatList: (state, action) => {
+      const newUser = action.payload;
+      const existingUser = state.usersList.find(u => u.user._id === newUser.user._id);
+      if (!existingUser) {
+        state.usersList.push(newUser);
+      }
+    },
+    setAllUsers: (state, action) => {
+      state.allUsers = action.payload;
+    },
+
+    // optionally clear allUsers on cleanup or logout
+    clearAllUsers: (state) => {
+      state.allUsers = [];
+    },
   },
 });
 
-export const { usersListStart, usersListSuccess, usersListFailure, moveUserToTop, clearUnreadForUser, incrementUnreadForUser } = usersListSlice.actions;
+export const {
+  usersListStart,
+  usersListSuccess,
+  usersListFailure,
+  moveUserToTop,
+  clearUnreadForUser,
+  incrementUnreadForUser,
+  addUserToChatList,
+  setAllUsers,
+  clearAllUsers,
+} = usersListSlice.actions;
 export default usersListSlice.reducer;
